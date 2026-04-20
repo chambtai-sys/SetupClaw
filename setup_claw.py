@@ -13,7 +13,7 @@ import platform
 import getpass
 import textwrap
 
-# ─── Constants ──────────────────────────────────────────────────
+# ─── Constants ──────────────────────
 
 MIN_NODE_VERSION = (22, 0, 0)
 INSTALL_CMD = 'curl -fsSL https://openclaw.ai/install.sh | bash'
@@ -165,7 +165,7 @@ def run_prerequisite_checks() -> bool:
     if node_ok:
         status = green(f"✔ v{node_ver}")
     elif node_ver == "not found":
-        status = red("✘ missing")
+        status = red("✘ missing"
     else:
         status = red(f"✘ v{node_ver} (need ≥{'.'.join(map(str, MIN_NODE_VERSION))})")
     print(f"  Node.js      : {status}")
@@ -190,7 +190,7 @@ def run_prerequisite_checks() -> bool:
     return all_ok
 
 
-# ─── Menu actions ─────────────
+# ─── Menu actions ───
 
 def action_install() -> None:
     hr()
@@ -390,7 +390,72 @@ def action_docs() -> None:
     pause()
 
 
-# ─── Main loop ────────
+def action_examples() -> None:
+    hr()
+    print(bold("  OpenClaw Agent Examples"))
+    hr()
+    
+    examples_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "examples")
+    if not os.path.exists(examples_dir):
+        print(red("  ✘ Examples directory not found."))
+        pause()
+        return
+
+    print("  Explore curated examples for your OpenClaw agents:")
+    print()
+    
+    categories = [
+        ("Researcher", "researcher", "A meticulous agent for deep dives and citations."),
+        ("Coding Assistant", "coding-assistant", "A senior engineer for clean code and PR reviews."),
+        ("Custom Skill", "custom-skill-example", "Example of a custom SKILL.md definition.")
+    ]
+
+    for i, (name, path, desc) in enumerate(categories, 1):
+        print(f"  [{i}] {bold(name)}")
+        print(f"      {desc}")
+    
+    print("  [b] Back to main menu")
+    print()
+
+    choice = input("  Select an example to view details: ").strip().lower()
+    
+    if choice == 'b':
+        return
+
+    try:
+        idx = int(choice) - 1
+        if 0 <= idx < len(categories):
+            name, path, _ = categories[idx]
+            example_path = os.path.join(examples_dir, path)
+            
+            hr()
+            print(bold(f"  Example: {name}"))
+            hr()
+            
+            for root, dirs, files in os.walk(example_path):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    print(f"\n  {cyan('--- ' + file + ' ---')}")
+                    with open(file_path, 'r') as f:
+                        content = f.read()
+                        # Indent content
+                        print(textwrap.indent(content, "    "))
+            
+            pause()
+            # Recursive call to stay in examples menu
+            action_examples()
+        else:
+            print(red("  Invalid choice."))
+            pause()
+            action_examples()
+    except ValueError:
+        if choice != 'b':
+            print(red("  Invalid input."))
+            pause()
+            action_examples()
+
+
+# ─── Main loop ───
 
 def main_menu() -> None:
     banner()
@@ -405,6 +470,7 @@ def main_menu() -> None:
         print("  [3] Verify Installation & Run Doctor")
         print("  [4] Documentation & Resources")
         print("  [5] Run Prerequisite Checks")
+        print("  [6] Explore Agent Examples")
         print("  [q] Quit")
         print()
 
@@ -421,6 +487,8 @@ def main_menu() -> None:
         elif choice == '5':
             run_prerequisite_checks()
             pause()
+        elif choice == '6':
+            action_examples()
         elif choice in ('q', 'quit', 'exit'):
             print()
             print(green("  Goodbye! 🐾"))

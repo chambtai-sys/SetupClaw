@@ -52,12 +52,13 @@ You'll see:
 
 ```
   Main Menu
-──────────────────────────────────────────────────────────
+────────────────────────────────────────
   [1] Install OpenClaw
   [2] Setup API Keys (Anthropic / OpenAI)
   [3] Verify Installation & Run Doctor
   [4] Documentation & Resources
   [5] Run Prerequisite Checks
+  [6] Explore Agent Examples
   [q] Quit
 ```
 
@@ -70,6 +71,7 @@ You'll see:
 | **3 — Verify & Doctor** | Confirms `openclaw` is on your PATH, prints its version, and runs `openclaw doctor` for a full health check. |
 | **4 — Documentation** | Links to official docs, GitHub, and Discord. Optionally opens docs in your browser. |
 | **5 — Prerequisites** | Checks Node.js, Git, and curl without installing anything. |
+| **6 — Agent Examples** | Explore pre-configured agent templates for research and coding. |
 
 ## Features
 
@@ -79,6 +81,7 @@ You'll see:
 - **Non-destructive key management** — detects existing API keys, masks them, and asks before overwriting.
 - **Coloured output** — respects `NO_COLOR` and non-TTY environments.
 - **Safe execution** — confirms destructive actions before running.
+- **Agent Examples** — Explore pre-configured agent templates for research and coding.
 
 ## Project Structure
 
@@ -87,7 +90,8 @@ SetupClaw/
 ├── setup_claw.py      # Main installer script
 ├── README.md          # This file
 ├── LICENSE            # MIT License
-└── requirements.txt   # Empty (stdlib only)
+├── requirements.txt   # Empty (stdlib only)
+└── examples/          # Agent and skill templates
 ```
 
 ## Contributing
